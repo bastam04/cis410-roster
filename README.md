@@ -26,7 +26,7 @@ Roster is a web application that helps small businesses manage employee scheduli
 - **Container Registry:** Artifact Registry
 - **Compute:** Cloud Run
 - **Infrastructure as Code:** Terraform
-- **CI/CD:** GitHub Actions (OIDC — no stored keys)
+- **CI/CD:** GitHub Actions (OIDC - no stored keys)
 - **Security Scanning:** Snyk (SAST + SCA + Container)
 
 ---
