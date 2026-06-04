@@ -1,7 +1,7 @@
-# Roster — Shift Scheduling App
+# Roster: Shift Scheduling App
 
 **Company:** ShiftSync
-**Project:** CIS 410 Cybersecurity Automation — Capstone
+**Project:** CIS 410 Cybersecurity Automation Capstone
 
 Roster is a web application that helps small businesses manage employee scheduling. Managers can post shifts and employees can view and claim available shifts.
 
@@ -45,9 +45,9 @@ See [docs/architecture.md](docs/architecture.md) for the full architecture diagr
 
 ## Security Commitments
 
-- Least-privilege IAM — service accounts have only required permissions
-- No hardcoded secrets — all credentials stored in Secret Manager
-- OIDC authentication — no long-lived keys stored in GitHub
-- Branch protection — all changes via pull request with 1 required reviewer
+- Least-privilege IAM - service accounts have only required permissions
+- No hardcoded secrets - all credentials stored in Secret Manager
+- OIDC authentication - no long-lived keys stored in GitHub
+- Branch protection - all changes via pull request with 1 required reviewer
 - Snyk scanning on every pull request
-- terraform.tfvars gitignored — no secrets committed to GitHub
+- terraform.tfvars gitignored - no secrets committed to GitHub
