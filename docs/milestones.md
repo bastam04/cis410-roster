@@ -12,7 +12,7 @@
 | terraform/app/ folder with stub files | Bassam (Project Lead) | Done |
 | Architecture diagram committed to docs/ | Bassam (Project Lead) | Done |
 | README.md with team info | Bassam (Project Lead) | Done |
-| terraform-plan.yml workflow green | Bassam (Project Lead) | In Progress |
+| terraform-plan.yml workflow green | Bassam (Project Lead) | Done |
 
 ## Week 11 Tasks
 
