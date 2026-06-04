@@ -14,6 +14,7 @@ Roster is a web application that helps small businesses manage employee scheduli
 | Bassam Tamer | Project Lead | bastam04 |
 | Abel Biruk | Backend Engineer | AbelBiruk100 |
 | Hibrework Demewoz | Frontend Engineer | Hibr-gech |
+| Abdinoor | DevSecOps Engineer | kaamil2026 |
 | Ezatullah Saleh | Security Reviewer | arsin2022 |
 
 ---
