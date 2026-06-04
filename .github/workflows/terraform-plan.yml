@@ -1,0 +1,46 @@
+name: Terraform Plan
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "terraform/**"
+  workflow_dispatch:
+
+jobs:
+  terraform-plan:
+    runs-on: ubuntu-latest
+    name: Plan Infrastructure
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Authenticate to GCP via OIDC
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+          service_account: ${{ vars.SA_EMAIL }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6
+
+      - name: Terraform Init (infrastructure)
+        run: terraform init
+        working-directory: terraform/infrastructure
+
+      - name: Terraform Validate (infrastructure)
+        run: terraform validate
+        working-directory: terraform/infrastructure
+
+      - name: Terraform Plan (infrastructure)
+        run: terraform plan -no-color
+        working-directory: terraform/infrastructure
+        env:
+          TF_VAR_project_id: ${{ vars.TF_VAR_PROJECT_ID }}
