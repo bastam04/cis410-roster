@@ -17,12 +17,6 @@ provider "google" {
   region  = var.region
 }
 
-resource "google_artifact_registry_repository" "roster_repo" {
-  location      = var.region
-  repository_id = "roster-app"
-  format        = "DOCKER"
-}
-
 resource "google_cloud_run_v2_service" "roster_app" {
   name     = "roster-app"
   location = var.region
