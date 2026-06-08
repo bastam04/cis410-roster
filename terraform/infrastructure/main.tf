@@ -6,6 +6,10 @@ terraform {
       version = "~> 5.0"
     }
   }
+  backend "gcs" {
+    bucket = "cis410-btamer-tfstate"
+    prefix = "roster/infrastructure"
+  }
 }
 
 provider "google" {
@@ -13,7 +17,6 @@ provider "google" {
   region  = var.region
 }
 
-# ── VPC ───────────────────────────────────────────────────────────────────────
 resource "google_compute_network" "roster_vpc" {
   name                    = "roster-vpc"
   auto_create_subnetworks = false
@@ -26,7 +29,6 @@ resource "google_compute_subnetwork" "roster_subnet" {
   network       = google_compute_network.roster_vpc.id
 }
 
-# ── Cloud SQL (PostgreSQL) ────────────────────────────────────────────────────
 resource "google_sql_database_instance" "roster_db" {
   name             = "roster-db"
   database_version = "POSTGRES_15"
@@ -55,7 +57,6 @@ resource "google_sql_user" "roster_user" {
   password = var.db_password
 }
 
-# ── Secret Manager ────────────────────────────────────────────────────────────
 resource "google_secret_manager_secret" "db_password" {
   secret_id = "roster-db-password"
   replication {
@@ -63,12 +64,6 @@ resource "google_secret_manager_secret" "db_password" {
   }
 }
 
-resource "google_secret_manager_secret_version" "db_password_version" {
-  secret      = google_secret_manager_secret.db_password.id
-  secret_data = var.db_password
-}
-
-# ── IAM — allow Cloud Run SA to access secrets ────────────────────────────────
 resource "google_secret_manager_secret_iam_member" "cloudrun_secret_access" {
   secret_id = google_secret_manager_secret.db_password.id
   role      = "roles/secretmanager.secretAccessor"
