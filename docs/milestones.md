@@ -25,13 +25,15 @@
 | Frontend integrated with backend API | Hibrework (Frontend) | Pending |
 | GitHub Actions CI/CD pipeline | Bassam (Project Lead) | Done |
 | Snyk SAST + SCA + Container scanning | Bassam (Project Lead) | Done |
+| Terraform infrastructure apply — VPC, Cloud SQL, Secret Manager | Bassam (Project Lead) | Done |
 | Terraform app apply via pipeline | Bassam (Project Lead) | Done |
 | Secret Manager wired to Cloud Run | Bassam (Project Lead) | Done |
 | App deployed to Cloud Run | Bassam (Project Lead) | Done |
+| Deployment guide committed to docs/ | Bassam (Project Lead) | Done |
 | IAM audit and security review | Ezatullah (Security) | Pending |
 | README security section complete | Ezatullah (Security) | Pending |
 | Live demo rehearsed | All members | Pending |
 
 ## Notes
 
-> **DevSecOps Role — Abdinoor:** As of 6/8/2026, Abdinoor has not accepted the GitHub collaborator invitation, has not provided his GCP email, and has made no contributions to the project. The DevSecOps responsibilities (CI/CD pipeline, Snyk scanning, Terraform apply) were absorbed by Bassam (Project Lead) to ensure project completion. Discord messages were sent on multiple occasions with no response.
+> **DevSecOps Role — Abdinoor (kaamil2019):** As of 6/8/2026, Abdinoor has not accepted the GitHub collaborator invitation, has not provided his GCP email, and has made no contributions to the project. The DevSecOps responsibilities (CI/CD pipeline, Snyk scanning, Terraform apply) were absorbed by Bassam (Project Lead) to ensure project completion. Discord messages were sent on multiple occasions with no response.
