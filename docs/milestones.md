@@ -36,4 +36,4 @@
 
 ## Notes
 
-> **DevSecOps Role — Abdinoor (kaamil2019):** As of 6/8/2026, Abdinoor has not accepted the GitHub collaborator invitation, has not provided his GCP email, and has made no contributions to the project. The DevSecOps responsibilities (CI/CD pipeline, Snyk scanning, Terraform apply) were absorbed by Bassam (Project Lead) to ensure project completion. Discord messages were sent on multiple occasions with no response.
+> **DevSecOps Role — Abdinoor:** As of 6/8/2026, Abdinoor has not accepted the GitHub collaborator invitation, has not provided his GCP email, and has made no contributions to the project. The DevSecOps responsibilities (CI/CD pipeline, Snyk scanning, Terraform apply) were absorbed by Bassam (Project Lead) to ensure project completion. Discord messages were sent on multiple occasions with no response.
