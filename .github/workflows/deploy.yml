@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ main ]
   workflow_dispatch:
+concurrency:
+  group: terraform-apply
+  cancel-in-progress: true
 
 jobs:
 
