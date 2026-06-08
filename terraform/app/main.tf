@@ -6,6 +6,10 @@ terraform {
       version = "~> 5.0"
     }
   }
+  backend "gcs" {
+    bucket = "cis410-btamer-tfstate"
+    prefix = "roster/app"
+  }
 }
 
 provider "google" {
@@ -13,21 +17,19 @@ provider "google" {
   region  = var.region
 }
 
-# ── Artifact Registry ─────────────────────────────────────────────────────────
 resource "google_artifact_registry_repository" "roster_repo" {
   location      = var.region
   repository_id = "roster-app"
   format        = "DOCKER"
 }
 
-# ── Cloud Run ─────────────────────────────────────────────────────────────────
 resource "google_cloud_run_v2_service" "roster_app" {
   name     = "roster-app"
   location = var.region
 
   template {
     containers {
-      image = "${var.region}-docker.pkg.dev/${var.project_id}/roster-app/roster:latest"
+      image = "${var.region}-docker.pkg.dev/${var.project_id}/roster-app/roster:${var.image_tag}"
 
       env {
         name = "DB_PASSWORD"
@@ -54,7 +56,6 @@ resource "google_cloud_run_v2_service" "roster_app" {
   }
 }
 
-# ── Allow public access to Cloud Run ─────────────────────────────────────────
 resource "google_cloud_run_v2_service_iam_member" "public_access" {
   project  = var.project_id
   location = var.region
