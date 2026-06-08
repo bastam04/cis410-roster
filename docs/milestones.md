@@ -29,7 +29,6 @@
 | Secret Manager wired to Cloud Run | Bassam (Project Lead) | Done |
 | App deployed to Cloud Run | Bassam (Project Lead) | Done |
 | IAM audit and security review | Ezatullah (Security) | Pending |
-| PR reviews for all merges | Ezatullah (Security) | Pending |
 | README security section complete | Ezatullah (Security) | Pending |
 | Live demo rehearsed | All members | Pending |
 
