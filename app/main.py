@@ -4,7 +4,7 @@ import socket
 import secrets
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from flask import Flask, request, jsonify, render_template, g
+from flask import Flask, request, jsonify, render_template, g, redirect
 
 app = Flask(__name__)
 
@@ -35,19 +35,16 @@ def init_db():
     cur.close()
     conn.close()
 
-# ── Run init_db on startup (works with gunicorn in Cloud Run) ─────────────────
 with app.app_context():
     try:
         init_db()
     except Exception as e:
         print(f"DB init error: {e}")
 
-# ── Security nonce ────────────────────────────────────────────────────────────
 @app.before_request
 def generate_nonce():
     g.nonce = secrets.token_hex(16)
 
-# ── Security headers ──────────────────────────────────────────────────────────
 @app.after_request
 def set_security_headers(response):
     response.headers['X-Frame-Options'] = 'DENY'
@@ -55,7 +52,6 @@ def set_security_headers(response):
     response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate, private'
     return response
 
-# ── Routes ────────────────────────────────────────────────────────────────────
 @app.route('/')
 def index():
     try:
@@ -98,7 +94,11 @@ def get_shifts():
 
 @app.route('/shifts', methods=['POST'])
 def create_shift():
-    data = request.get_json()
+    if request.content_type and 'application/json' in request.content_type:
+        data = request.get_json()
+    else:
+        data = request.form
+
     if not data or not all(k in data for k in ['title', 'date', 'start', 'end']):
         return jsonify({"error": "Missing required fields"}), 400
 
@@ -111,15 +111,19 @@ def create_shift():
                   end_time AS end, claimed_by;
     """, (data['title'], data['date'], data['start'], data['end'], None))
 
-    new_shift = cur.fetchone()
+    cur.fetchone()
     conn.commit()
     cur.close()
     conn.close()
-    return jsonify(new_shift), 201
+    return redirect('/')
 
 @app.route('/shifts/<int:shift_id>/claim', methods=['POST'])
 def claim_shift(shift_id):
-    data = request.get_json()
+    if request.content_type and 'application/json' in request.content_type:
+        data = request.get_json()
+    else:
+        data = request.form
+
     if not data or 'employee' not in data:
         return jsonify({"error": "Employee name required"}), 400
 
@@ -145,11 +149,11 @@ def claim_shift(shift_id):
                   end_time AS end, claimed_by;
     """, (data['employee'], shift_id))
 
-    updated_shift = cur.fetchone()
+    cur.fetchone()
     conn.commit()
     cur.close()
     conn.close()
-    return jsonify(updated_shift)
+    return redirect('/')
 
 @app.route('/shifts/<int:shift_id>', methods=['DELETE'])
 def delete_shift(shift_id):
