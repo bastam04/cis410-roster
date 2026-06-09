@@ -35,10 +35,19 @@ def init_db():
     cur.close()
     conn.close()
 
+# ── Run init_db on startup (works with gunicorn in Cloud Run) ─────────────────
+with app.app_context():
+    try:
+        init_db()
+    except Exception as e:
+        print(f"DB init error: {e}")
+
+# ── Security nonce ────────────────────────────────────────────────────────────
 @app.before_request
 def generate_nonce():
     g.nonce = secrets.token_hex(16)
 
+# ── Security headers ──────────────────────────────────────────────────────────
 @app.after_request
 def set_security_headers(response):
     response.headers['X-Frame-Options'] = 'DENY'
@@ -46,16 +55,26 @@ def set_security_headers(response):
     response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate, private'
     return response
 
+# ── Routes ────────────────────────────────────────────────────────────────────
 @app.route('/')
 def index():
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("SELECT id, title, shift_date AS date, start_time AS start, end_time AS end, claimed_by FROM shifts ORDER BY shift_date, start_time;")
-    shifts = cur.fetchall()
-    cur.close()
-    conn.close()
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT id, title, shift_date AS date, start_time AS start,
+                   end_time AS end, claimed_by
+            FROM shifts
+            ORDER BY shift_date, start_time;
+        """)
+        shifts = cur.fetchall()
+        cur.close()
+        conn.close()
+    except Exception as e:
+        print(f"DB error: {e}")
+        shifts = []
 
-    return render_template('index.html', 
+    return render_template('index.html',
         shifts=shifts,
         environment=os.environ.get('ENVIRONMENT', 'production'),
         hostname=socket.gethostname(),
@@ -67,7 +86,8 @@ def get_shifts():
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute("""
-        SELECT id, title, shift_date AS date, start_time AS start, end_time AS end, claimed_by
+        SELECT id, title, shift_date AS date, start_time AS start,
+               end_time AS end, claimed_by
         FROM shifts
         ORDER BY shift_date, start_time;
     """)
@@ -87,7 +107,8 @@ def create_shift():
     cur.execute("""
         INSERT INTO shifts (title, shift_date, start_time, end_time, claimed_by)
         VALUES (%s, %s, %s, %s, %s)
-        RETURNING id, title, shift_date AS date, start_time AS start, end_time AS end, claimed_by;
+        RETURNING id, title, shift_date AS date, start_time AS start,
+                  end_time AS end, claimed_by;
     """, (data['title'], data['date'], data['start'], data['end'], None))
 
     new_shift = cur.fetchone()
@@ -119,10 +140,9 @@ def claim_shift(shift_id):
         return jsonify({"error": "Shift already claimed"}), 409
 
     cur.execute("""
-        UPDATE shifts
-        SET claimed_by = %s
-        WHERE id = %s
-        RETURNING id, title, shift_date AS date, start_time AS start, end_time AS end, claimed_by;
+        UPDATE shifts SET claimed_by = %s WHERE id = %s
+        RETURNING id, title, shift_date AS date, start_time AS start,
+                  end_time AS end, claimed_by;
     """, (data['employee'], shift_id))
 
     updated_shift = cur.fetchone()
@@ -135,17 +155,14 @@ def claim_shift(shift_id):
 def delete_shift(shift_id):
     conn = get_db_connection()
     cur = conn.cursor()
-
     cur.execute("DELETE FROM shifts WHERE id = %s RETURNING id;", (shift_id,))
     deleted_shift = cur.fetchone()
     conn.commit()
-
     cur.close()
     conn.close()
 
     if deleted_shift:
         return jsonify({"message": "Shift deleted"}), 200
-
     return jsonify({"error": "Shift not found"}), 404
 
 @app.route('/health')
@@ -153,12 +170,11 @@ def health():
     return jsonify({
         "status": "ok",
         "app": "roster",
-        "version": os.environ.get('APP_VERSION', '1.0.0'),
+        "version": os.environ.get('APP_VERSION', '1.1.0'),
         "env": os.environ.get('ENVIRONMENT', 'dev'),
         "host": socket.gethostname(),
         "time": datetime.datetime.utcnow().isoformat() + 'Z',
     })
 
 if __name__ == '__main__':
-    init_db()
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host='0.0.0.0', port=8080, debug=False)
