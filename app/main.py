@@ -4,7 +4,7 @@ import socket
 import secrets
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from flask import Flask, request, jsonify, render_template_string, g
+from flask import Flask, request, jsonify, render_template, g
 
 app = Flask(__name__)
 
@@ -48,21 +48,19 @@ def set_security_headers(response):
 
 @app.route('/')
 def index():
-    html = """
-    <!DOCTYPE html>
-    <html>
-    <head><title>Roster — Shift Scheduler</title></head>
-    <body>
-        <h1>Roster</h1>
-        <p>Simplifying scheduling so small businesses can focus on what matters most.</p>
-        <ul>
-            <li><a href="/shifts">View Available Shifts</a></li>
-            <li><a href="/health">Health Check</a></li>
-        </ul>
-    </body>
-    </html>
-    """
-    return render_template_string(html)
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT id, title, shift_date AS date, start_time AS start, end_time AS end, claimed_by FROM shifts ORDER BY shift_date, start_time;")
+    shifts = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    return render_template('index.html', 
+        shifts=shifts,
+        environment=os.environ.get('ENVIRONMENT', 'production'),
+        hostname=socket.gethostname(),
+        version=os.environ.get('APP_VERSION', '1.1.0')
+    )
 
 @app.route('/shifts', methods=['GET'])
 def get_shifts():
