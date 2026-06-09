@@ -4,7 +4,7 @@
 
 | Task | Owner | Status |
 |---|---|---|
-| Complete One-Pager Sections 1-9 | All members | In Progress |
+| Complete One-Pager Sections 1-9 | All members | Done |
 | Create team GitHub repo + branch protection | Bassam (Project Lead) | Done |
 | OIDC configured for team repo | Bassam (Project Lead) | Done |
 | GitHub Variables set: WIF_PROVIDER, SA_EMAIL, TF_VAR_PROJECT_ID | Bassam (Project Lead) | Done |
@@ -21,8 +21,8 @@
 | Flask API endpoints complete | Abel (Backend) | Done |
 | Cloud SQL integration | Abel (Backend) | Done |
 | Dockerfile finalized | Bassam (Project Lead) | Done |
-| Frontend UI — shift listing and claiming | Hibrework (Frontend) | Pending |
-| Frontend integrated with backend API | Hibrework (Frontend) | Pending |
+| Frontend UI — shift listing and claiming | Hibrework (Frontend) | Done |
+| Frontend integrated with backend API | Hibrework (Frontend) | Done |
 | GitHub Actions CI/CD pipeline | Bassam (Project Lead) | Done |
 | Snyk SAST + SCA + Container scanning | Bassam (Project Lead) | Done |
 | Terraform infrastructure apply — VPC, Cloud SQL, Secret Manager | Bassam (Project Lead) | Done |
@@ -30,9 +30,9 @@
 | Secret Manager wired to Cloud Run | Bassam (Project Lead) | Done |
 | App deployed to Cloud Run | Bassam (Project Lead) | Done |
 | Deployment guide committed to docs/ | Bassam (Project Lead) | Done |
-| IAM audit and security review | Ezatullah (Security) | Pending |
-| README security section complete | Ezatullah (Security) | Pending |
-| Live demo rehearsed | All members | Pending |
+| IAM audit and security review | Ezatullah (Security) | Done |
+| README security section complete | Ezatullah (Security) | Done |
+| Live demo rehearsed | All members | Done |
 
 ## Notes
 
